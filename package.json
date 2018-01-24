@@ -2,10 +2,12 @@
   "name": "payrex-js-sdk-base",
   "version": "1.0.0",
   "description": "Payrex Javascript SDK Base class",
-  "main": "src/index.js",
+  "main": "dist/PayrexSdkBase.js",
   "scripts": {
     "start": "eslint src/index.js",
     "eslint": "eslint src/index.js",
+    "build": "npm run test && babel src --source-maps --out-dir=dist",
+    "watch": "babel src --watch --source-maps --out-dir=dist",
     "test": "npm run eslint && mocha"
   },
   "repository": {
@@ -20,6 +22,8 @@
   "homepage": "https://github.com/payrex/js-sdk#README",
   "devDependencies": {
     "assert": "^1.4.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "eslint": "^4.16.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",

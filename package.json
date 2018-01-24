@@ -20,12 +20,11 @@
   "homepage": "https://github.com/payrex/js-sdk#README",
   "devDependencies": {
     "assert": "^1.4.1",
-    "node-fetch": "^1.7.3",
-    "whatwg-fetch": "^2.0.3",
     "eslint": "^4.16.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "mocha": "^5.0.0",
-    "sinon": "^4.2.0"
+    "node-fetch": "^1.7.3",
+    "sinon": "^4.2.1"
   }
 }

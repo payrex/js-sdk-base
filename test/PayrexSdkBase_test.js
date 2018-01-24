@@ -7,6 +7,27 @@ const PayrexSdkBase = require('../src/PayrexSdkBase');
 // Base64 mock function
 const base64Encode = str => Buffer.from(str, 'utf-8').toString('base64');
 
+// Get error
+const getError = (statusCode = 500, code = 'ERROR_CODE', message = 'Message...') => {
+  const fetchSpy = sinon.spy(() => {
+    const body = `{"code":"${code}","message":"${message}"}`;
+    return Promise.resolve(new fetch.Response(body, {
+      status: statusCode,
+      headers: { 'Content-Type': 'application/json' },
+    }));
+  });
+  fetchSpy.Headers = fetch.Headers;
+  const sdk = new PayrexSdkBase({
+    publicKey: 'PUBLIC-XXXXXXXX',
+    secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+    baseUrl: 'http://localhost/',
+    Url: URL,
+    fetch: fetchSpy,
+    base64Encode,
+  });
+  return { fetchSpy, sdk };
+};
+
 describe('PayrexSdkBase', () => {
   describe('#constructor()', () => {
     it('should create success', () => {
@@ -26,6 +47,17 @@ describe('PayrexSdkBase', () => {
       assert.strictEqual(typeof sdk.post, 'function');
       assert.strictEqual(typeof sdk.put, 'function');
       assert.strictEqual(typeof sdk.remove, 'function');
+    });
+    it('should throw validation error', () => {
+      assert.throws(() => {
+        new PayrexSdkBase({
+          publicKey: 'PUBLIC-XXXXXXXX',
+          secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+          baseUrl: 'http://localhost/',
+          Url: URL,
+          base64Encode,
+        });
+      }, /Option "fetch" is required/);
     });
   });
   describe('#get()', function () {
@@ -63,23 +95,8 @@ describe('PayrexSdkBase', () => {
         })
         .catch(done);
     });
-    it('should return error', function (done) {
-      const fetchSpy = sinon.spy(() => {
-        const body = '{"code":"ERROR_CODE","message":"Message..."}';
-        return Promise.resolve(new fetch.Response(body, {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        }));
-      });
-      fetchSpy.Headers = fetch.Headers;
-      const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
-        baseUrl: 'http://localhost/',
-        Url: URL,
-        fetch: fetchSpy,
-        base64Encode,
-      });
+    it('should return error (500 - detailed)', function (done) {
+      const { fetchSpy, sdk } = getError(500);
       sdk
         .get('/users')
         .then(() => {
@@ -87,7 +104,7 @@ describe('PayrexSdkBase', () => {
         })
         .catch((err) => {
           assert.strictEqual(err.code, 'ERROR_CODE');
-          assert(err.message.includes('Message...'));
+          assert.strictEqual(err.message, 'Message...');
           assert(err.toString().includes('Message...'));
           // Check fetch
           assert(fetchSpy.calledOnce);
@@ -98,6 +115,73 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
           assert(!callArgs[1].body);
+          done();
+        });
+    });
+    it('should return error (400)', function (done) {
+      getError(400, code = '', message = 'ERR_400')
+        .sdk
+        .get('/users')
+        .then(() => {
+          done(new Error('Must not be executed!'));
+        })
+        .catch((err) => {
+          assert.strictEqual(err.code, 'ValidationFailed');
+          assert.strictEqual(err.message, 'ERR_400');
+          assert(err.toString().includes('ERR_400'));
+          done();
+        });
+    });
+    it('should return error (404)', function (done) {
+      getError(404, code = '', message = 'ERR_404')
+        .sdk
+        .get('/users')
+        .then(() => {
+          done(new Error('Must not be executed!'));
+        })
+        .catch((err) => {
+          assert.strictEqual(err.code, 'NotFound');
+          assert.strictEqual(err.message, 'ERR_404');
+          assert(err.toString().includes('ERR_404'));
+          done();
+        });
+    });
+    it('should return error (403)', function (done) {
+      getError(403, code = '', message = 'ERR_403')
+        .sdk
+        .get('/users')
+        .then(() => {
+          done(new Error('Must not be executed!'));
+        })
+        .catch((err) => {
+          assert.strictEqual(err.code, 'Forbidden');
+          assert.strictEqual(err.message, 'ERR_403');
+          assert(err.toString().includes('ERR_403'));
+          done();
+        });
+    });
+    it('should return error (unexpected)', function (done) {
+      getError(501, code = '', message = '')
+        .sdk
+        .get('/users')
+        .then(() => {
+          done(new Error('Must not be executed!'));
+        })
+        .catch((err) => {
+          assert.strictEqual(err.code, 'UnexpectedStatusCode');
+          assert.strictEqual(err.message, 'UnexpectedStatusCode');
+          assert(err.toString().includes('UnexpectedStatusCode'));
+          done();
+        });
+    });
+    it('should return error (broken json)', function (done) {
+      getError(200, code = '', message = '"')
+        .sdk
+        .get('/users')
+        .then(() => {
+          done(new Error('Must not be executed!'));
+        })
+        .catch(() => {
           done();
         });
     });

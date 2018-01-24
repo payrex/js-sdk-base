@@ -1,5 +1,7 @@
 const PayrexApiError = require('./PayrexApiError');
 
+const REQUIRED_FIELDS = ['baseUrl', 'fetch', 'Url', 'base64Encode'];
+
 class PayrexSdkBase {
   /**
    * PayrexSdkBase constructor
@@ -11,7 +13,14 @@ class PayrexSdkBase {
    * @param {function} options.Url [Url class](https://url.spec.whatwg.org/)
    * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */
-  constructor(options) {
+  constructor(options = {}) {
+    REQUIRED_FIELDS
+      .forEach((value) => {
+        if (!options[value]) {
+          throw new Error(`Option "${value}" is required`);
+        }
+      });
+
     const {
       publicKey = '',
       secretKey = '',
@@ -20,19 +29,7 @@ class PayrexSdkBase {
       Url,
       base64Encode,
     } = options;
-    // TODO: Update validation
-    if (typeof publicKey !== 'string') {
-      throw new Error('PayrexSdkBase required option "publicKey"');
-    }
-    if (typeof fetch !== 'function') {
-      throw new Error('PayrexSdkBase required option "fetch"');
-    }
-    if (typeof Url !== 'function') {
-      throw new Error('PayrexSdkBase required option "Url"');
-    }
-    if (typeof base64Encode !== 'function') {
-      throw new Error('PayrexSdkBase required option "base64Encode"');
-    }
+
     this.publicKey = publicKey;
     this.secretKey = secretKey;
     this.baseUrl = baseUrl;

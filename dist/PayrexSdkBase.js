@@ -8,6 +8,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var PayrexApiError = require('./PayrexApiError');
 
+var REQUIRED_FIELDS = ['baseUrl', 'fetch', 'Url', 'base64Encode'];
+
 var PayrexSdkBase = function () {
   /**
    * PayrexSdkBase constructor
@@ -19,8 +21,16 @@ var PayrexSdkBase = function () {
    * @param {function} options.Url [Url class](https://url.spec.whatwg.org/)
    * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */
-  function PayrexSdkBase(options) {
+  function PayrexSdkBase() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, PayrexSdkBase);
+
+    REQUIRED_FIELDS.forEach(function (value) {
+      if (!options[value]) {
+        throw new Error(`Option "${value}" is required`);
+      }
+    });
 
     var _options$publicKey = options.publicKey,
         publicKey = _options$publicKey === undefined ? '' : _options$publicKey,
@@ -31,20 +41,8 @@ var PayrexSdkBase = function () {
         fetch = options.fetch,
         Url = options.Url,
         base64Encode = options.base64Encode;
-    // TODO: Update validation
 
-    if (typeof publicKey !== 'string') {
-      throw new Error('PayrexSdkBase required option "publicKey"');
-    }
-    if (typeof fetch !== 'function') {
-      throw new Error('PayrexSdkBase required option "fetch"');
-    }
-    if (typeof Url !== 'function') {
-      throw new Error('PayrexSdkBase required option "Url"');
-    }
-    if (typeof base64Encode !== 'function') {
-      throw new Error('PayrexSdkBase required option "base64Encode"');
-    }
+
     this.publicKey = publicKey;
     this.secretKey = secretKey;
     this.baseUrl = baseUrl;

@@ -8,3 +8,7 @@ install:
 script:
   - npm run codecov
   - ./node_modules/.bin/codecov
+deploy:
+  provider: npm
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN

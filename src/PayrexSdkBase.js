@@ -9,7 +9,7 @@ class PayrexSdkBase {
    * @param {string} options.publicKey
    * @param {string} options.secretKey
    * @param {string} options.baseUrl
-   * @param {function} options.fetch [Fetch class](https://fetch.spec.whatwg.org/)
+   * @param {function} options.fetch [Fetch function](https://fetch.spec.whatwg.org/)
    * @param {function} options.Url [Url class](https://url.spec.whatwg.org/)
    * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */

@@ -18,12 +18,10 @@
     "url": "https://github.com/payrex/js-sdk/issues"
   },
   "homepage": "https://github.com/payrex/js-sdk#README",
-  "dependencies": {
-    "node-fetch": "^1.7.3",
-    "whatwg-fetch": "^2.0.3"
-  },
   "devDependencies": {
     "assert": "^1.4.1",
+    "node-fetch": "^1.7.3",
+    "whatwg-fetch": "^2.0.3",
     "eslint": "^4.16.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",

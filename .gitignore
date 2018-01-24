@@ -15,3 +15,6 @@ nbproject
 Thumbs.db
 
 /npm-debug.log
+
+# Codecov
+/coverage

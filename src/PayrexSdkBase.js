@@ -1,6 +1,7 @@
+const { URL } = require('whatwg-url');
 const PayrexApiError = require('./PayrexApiError');
 
-const REQUIRED_FIELDS = ['fetch', 'Url', 'base64Encode'];
+const REQUIRED_FIELDS = ['fetch', 'base64Encode'];
 
 class PayrexSdkBase {
   /**
@@ -10,7 +11,6 @@ class PayrexSdkBase {
    * @param {string} options.secretKey
    * @param {string} options.baseUrl
    * @param {function} options.fetch [Fetch function](https://fetch.spec.whatwg.org/)
-   * @param {function} options.Url [Url class](https://url.spec.whatwg.org/)
    * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */
   constructor(options = {}) {
@@ -26,7 +26,6 @@ class PayrexSdkBase {
       secretKey = '',
       baseUrl = 'http://localhost:3000/',
       fetch,
-      Url,
       base64Encode,
     } = options;
     if (!baseUrl) {
@@ -37,7 +36,6 @@ class PayrexSdkBase {
     this.secretKey = secretKey;
     this.baseUrl = baseUrl;
     this.fetch = fetch;
-    this.Url = Url;
     this.base64Encode = base64Encode;
   }
 
@@ -92,7 +90,7 @@ class PayrexSdkBase {
    * @private
    */
   buildFetchOptions(method = 'GET', path = '', queryParams = {}, body = {}) {
-    const url = new this.Url(path, this.baseUrl);
+    const url = new URL(path, this.baseUrl);
     if (typeof queryParams === 'object') {
       Object.entries(queryParams)
         .forEach(([key, value]) => {

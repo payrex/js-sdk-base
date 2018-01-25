@@ -1,6 +1,5 @@
 const assert = require('assert');
 const sinon = require('sinon');
-const { URL } = require('url');
 const fetch = require('node-fetch');
 const PayrexSdkBase = require('../src/PayrexSdkBase');
 
@@ -21,7 +20,6 @@ const getError = (statusCode = 500, code = 'ERROR_CODE', message = 'Message...')
     publicKey: 'PUBLIC-XXXXXXXX',
     secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
     baseUrl: 'http://localhost/',
-    Url: URL,
     fetch: fetchSpy,
     base64Encode,
   });
@@ -35,7 +33,6 @@ describe('PayrexSdkBase', () => {
         publicKey: 'PUBLIC-XXXXXXXX',
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
-        Url: URL,
         fetch,
         base64Encode,
       });
@@ -54,14 +51,12 @@ describe('PayrexSdkBase', () => {
           publicKey: 'PUBLIC-XXXXXXXX',
           secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
           baseUrl: 'http://localhost/',
-          Url: URL,
           base64Encode,
         });
       }, /Option "fetch" is required/);
     });
     it('should create with minimum options', () => {
       new PayrexSdkBase({
-        Url: URL,
         fetch,
         base64Encode,
       });
@@ -80,7 +75,6 @@ describe('PayrexSdkBase', () => {
         publicKey: 'PUBLIC-XXXXXXXX',
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
-        Url: URL,
         fetch: fetchSpy,
         base64Encode,
       });
@@ -206,7 +200,6 @@ describe('PayrexSdkBase', () => {
         publicKey: 'PUBLIC-XXXXXXXX',
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
-        Url: URL,
         fetch: fetchSpy,
         base64Encode,
       });
@@ -242,7 +235,6 @@ describe('PayrexSdkBase', () => {
         publicKey: 'PUBLIC-XXXXXXXX',
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
-        Url: URL,
         fetch: fetchSpy,
         base64Encode,
       });
@@ -278,7 +270,6 @@ describe('PayrexSdkBase', () => {
         publicKey: 'PUBLIC-XXXXXXXX',
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
-        Url: URL,
         fetch: fetchSpy,
         base64Encode,
       });

@@ -29,5 +29,8 @@
     "mocha": "^5.0.0",
     "node-fetch": "^1.7.3",
     "sinon": "^4.2.1"
+  },
+  "dependencies": {
+    "whatwg-url": "^6.4.0"
   }
 }

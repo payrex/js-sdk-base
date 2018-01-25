@@ -4,23 +4,19 @@
   "description": "Payrex Javascript SDK Base class",
   "main": "dist/PayrexSdkBase.js",
   "scripts": {
-    "start": "eslint src/index.js",
     "eslint": "eslint src/index.js",
     "build": "npm run test && babel src --source-maps --out-dir=dist",
     "codecov": "istanbul cover ./node_modules/mocha/bin/_mocha --reporter test -- -R spec",
     "watch": "babel src --watch --source-maps --out-dir=dist",
     "test": "npm run eslint && mocha"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/payrex/js-sdk.git"
-  },
+  "repository": "payrex/js-sdk-base",
   "author": "payrex <payrex@no-email.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/payrex/js-sdk/issues"
+    "url": "https://github.com/payrex/js-sdk-base/issues"
   },
-  "homepage": "https://github.com/payrex/js-sdk#README",
+  "homepage": "https://github.com/payrex/js-sdk-base#readme",
   "devDependencies": {
     "assert": "^1.4.1",
     "babel-cli": "^6.26.0",

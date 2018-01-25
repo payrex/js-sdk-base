@@ -1,6 +1,6 @@
 const PayrexApiError = require('./PayrexApiError');
 
-const REQUIRED_FIELDS = ['baseUrl', 'fetch', 'Url', 'base64Encode'];
+const REQUIRED_FIELDS = ['fetch', 'Url', 'base64Encode'];
 
 class PayrexSdkBase {
   /**
@@ -29,6 +29,9 @@ class PayrexSdkBase {
       Url,
       base64Encode,
     } = options;
+    if (!baseUrl) {
+      throw new Error('Option "baseUrl" is required');
+    }
 
     this.publicKey = publicKey;
     this.secretKey = secretKey;

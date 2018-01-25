@@ -59,6 +59,13 @@ describe('PayrexSdkBase', () => {
         });
       }, /Option "fetch" is required/);
     });
+    it('should create with minimum options', () => {
+      new PayrexSdkBase({
+        Url: URL,
+        fetch,
+        base64Encode,
+      });
+    });
   });
   describe('#get()', function () {
     it('should return data successful', function (done) {

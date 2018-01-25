@@ -1,6 +1,6 @@
 {
   "name": "payrex-js-sdk-base",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Payrex Javascript SDK Base class",
   "main": "dist/PayrexSdkBase.js",
   "scripts": {

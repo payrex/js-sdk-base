@@ -6,9 +6,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var _require = require('whatwg-url'),
+    URL = _require.URL;
+
 var PayrexApiError = require('./PayrexApiError');
 
-var REQUIRED_FIELDS = ['baseUrl', 'fetch', 'Url', 'base64Encode'];
+var REQUIRED_FIELDS = ['fetch', 'base64Encode'];
 
 var PayrexSdkBase = function () {
   /**
@@ -18,7 +21,6 @@ var PayrexSdkBase = function () {
    * @param {string} options.secretKey
    * @param {string} options.baseUrl
    * @param {function} options.fetch [Fetch function](https://fetch.spec.whatwg.org/)
-   * @param {function} options.Url [Url class](https://url.spec.whatwg.org/)
    * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */
   function PayrexSdkBase() {
@@ -39,15 +41,16 @@ var PayrexSdkBase = function () {
         _options$baseUrl = options.baseUrl,
         baseUrl = _options$baseUrl === undefined ? 'http://localhost:3000/' : _options$baseUrl,
         fetch = options.fetch,
-        Url = options.Url,
         base64Encode = options.base64Encode;
 
+    if (!baseUrl) {
+      throw new Error('Option "baseUrl" is required');
+    }
 
     this.publicKey = publicKey;
     this.secretKey = secretKey;
     this.baseUrl = baseUrl;
     this.fetch = fetch;
-    this.Url = Url;
     this.base64Encode = base64Encode;
   }
 
@@ -149,7 +152,7 @@ var PayrexSdkBase = function () {
       var queryParams = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       var body = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-      var url = new this.Url(path, this.baseUrl);
+      var url = new URL(path, this.baseUrl);
       if (typeof queryParams === 'object') {
         Object.entries(queryParams).forEach(function (_ref5) {
           var _ref6 = _slicedToArray(_ref5, 2),

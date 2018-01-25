@@ -5,6 +5,8 @@ PAYREX-JS-SDK-BASE
 [![codecov](https://codecov.io/gh/payrex/js-sdk-base/branch/master/graph/badge.svg)](https://codecov.io/gh/payrex/js-sdk-base)
 
 Base class for Payrex JS SDK.
+Don't use this repo directly, you should use
+[payrex/js-sdk-node](https://github.com/payrex/js-sdk-node) instead.
 
 
 Install

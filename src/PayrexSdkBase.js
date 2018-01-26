@@ -92,9 +92,9 @@ class PayrexSdkBase {
   buildFetchOptions(method = 'GET', path = '', queryParams = {}, body = {}) {
     const url = new URL(path, this.baseUrl);
     if (typeof queryParams === 'object') {
-      Object.entries(queryParams)
-        .forEach(([key, value]) => {
-          url.searchParams.set(key, value);
+      Object.keys(queryParams)
+        .forEach((key) => {
+          url.searchParams.set(key, queryParams[key]);
         });
     }
     const options = {

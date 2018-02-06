@@ -21,6 +21,7 @@ const getError = (statusCode = 500, code = 'ERROR_CODE', message = 'Message...')
     secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
     baseUrl: 'http://localhost/',
     fetch: fetchSpy,
+    Headers: fetch.Headers,
     base64Encode,
   });
   return { fetchSpy, sdk };
@@ -34,6 +35,7 @@ describe('PayrexSdkBase', () => {
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch,
+        Headers: fetch.Headers,
         base64Encode,
       });
       assert.strictEqual(typeof sdk, 'object');
@@ -51,6 +53,7 @@ describe('PayrexSdkBase', () => {
           publicKey: 'PUBLIC-XXXXXXXX',
           secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
           baseUrl: 'http://localhost/',
+          Headers: fetch.Headers,
           base64Encode,
         });
       }, /Option "fetch" is required/);
@@ -58,6 +61,7 @@ describe('PayrexSdkBase', () => {
     it('should create with minimum options', () => {
       new PayrexSdkBase({
         fetch,
+        Headers: fetch.Headers,
         base64Encode,
       });
     });
@@ -76,6 +80,7 @@ describe('PayrexSdkBase', () => {
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
+        Headers: fetch.Headers,
         base64Encode,
       });
       sdk
@@ -201,6 +206,7 @@ describe('PayrexSdkBase', () => {
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
+        Headers: fetch.Headers,
         base64Encode,
       });
       sdk
@@ -216,7 +222,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
           assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
-          assert.deepStrictEqual(callArgs[1].body, { name: 'test', enabled: true });
+          assert.strictEqual(callArgs[1].body, '{"name":"test","enabled":true}');
           done();
         })
         .catch(done);
@@ -236,6 +242,7 @@ describe('PayrexSdkBase', () => {
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
+        Headers: fetch.Headers,
         base64Encode,
       });
       sdk
@@ -251,7 +258,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
           assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
-          assert.deepStrictEqual(callArgs[1].body, { name: 'test', enabled: true });
+          assert.strictEqual(callArgs[1].body, '{"name":"test","enabled":true}');
           done();
         })
         .catch(done);
@@ -271,6 +278,7 @@ describe('PayrexSdkBase', () => {
         secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
+        Headers: fetch.Headers,
         base64Encode,
       });
       sdk

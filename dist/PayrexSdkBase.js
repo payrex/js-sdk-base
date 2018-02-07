@@ -9,7 +9,7 @@ var _require = require('whatwg-url'),
 
 var PayrexApiError = require('./PayrexApiError');
 
-var REQUIRED_FIELDS = ['fetch', 'base64Encode'];
+var REQUIRED_FIELDS = ['fetch', 'Headers', 'base64Encode'];
 
 var PayrexSdkBase = function () {
   /**
@@ -19,6 +19,7 @@ var PayrexSdkBase = function () {
    * @param {string} options.secretKey
    * @param {string} options.baseUrl
    * @param {function} options.fetch [Fetch function](https://fetch.spec.whatwg.org/)
+   * @param {function} options.Headers [Fetch Headers](https://fetch.spec.whatwg.org/)
    * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */
   function PayrexSdkBase() {
@@ -39,6 +40,7 @@ var PayrexSdkBase = function () {
         _options$baseUrl = options.baseUrl,
         baseUrl = _options$baseUrl === undefined ? 'http://localhost:3000/' : _options$baseUrl,
         fetch = options.fetch,
+        Headers = options.Headers,
         base64Encode = options.base64Encode;
 
     if (!baseUrl) {
@@ -49,6 +51,7 @@ var PayrexSdkBase = function () {
     this.secretKey = secretKey;
     this.baseUrl = baseUrl;
     this.fetch = fetch;
+    this.Headers = Headers;
     this.base64Encode = base64Encode;
   }
 
@@ -158,12 +161,12 @@ var PayrexSdkBase = function () {
       }
       var options = {
         method,
-        headers: new this.fetch.Headers({
+        headers: new this.Headers({
           Accept: 'application/json',
           Authorization: `Basic ${this.base64Encode(`${this.publicKey}:${this.secretKey}`)}`,
           'Content-type': 'application/json'
         }),
-        body
+        body: body ? JSON.stringify(body) : undefined
       };
       return { url: url.toString(), options };
     }

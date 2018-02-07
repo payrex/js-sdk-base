@@ -143,7 +143,8 @@ class PayrexSdkBase {
   fetchRequest(method, path, queryParams, body) {
     const { url, options } = this.buildFetchOptions(method, path, queryParams, body);
     return this
-      .fetch(url, options)
+      .fetch
+      .call(null, url, options)
       .then((response) => {
         const { status } = response;
         const contentType = response.headers.get('content-type');

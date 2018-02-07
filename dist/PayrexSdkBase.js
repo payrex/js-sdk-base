@@ -188,7 +188,7 @@ var PayrexSdkBase = function () {
           url = _buildFetchOptions.url,
           options = _buildFetchOptions.options;
 
-      return this.fetch(url, options).then(function (response) {
+      return this.fetch.call(null, url, options).then(function (response) {
         var status = response.status;
 
         var contentType = response.headers.get('content-type');

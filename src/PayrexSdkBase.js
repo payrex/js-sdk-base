@@ -95,10 +95,7 @@ class PayrexSdkBase {
   buildFetchOptions(method = 'GET', path = '', queryParams = {}, body = {}) {
     const url = new URL(path, this.baseUrl);
     if (typeof queryParams === 'object') {
-      Object.keys(queryParams)
-        .forEach((key) => {
-          url.searchParams.set(key, queryParams[key]);
-        });
+      addQueryParams(url.searchParams, queryParams)
     }
     const options = {
       method,
@@ -155,6 +152,20 @@ class PayrexSdkBase {
           .json()
           .then(json => this.constructor.parseResponse(status, json));
       });
+  }
+}
+
+function addQueryParams(searchParams, obj, prefix = '') {
+  if (typeof obj === 'object') {
+    for (let key in obj) if (obj.hasOwnProperty(key)) {
+      const val = obj[key]
+      const newPrefix = prefix ? `${prefix}[${key}]` : key
+      if (typeof val === 'object') {
+        addQueryParams(searchParams, val, newPrefix)
+      } else {
+        searchParams.set(newPrefix, val)
+      }
+    }
   }
 }
 

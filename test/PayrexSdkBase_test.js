@@ -191,6 +191,35 @@ describe('PayrexSdkBase', () => {
           done();
         });
     });
+    it('should support nested queryOption - objects and arrays', function (done) {
+      const fetchSpy = sinon.spy(() => {
+        const body = '{}';
+        return Promise.resolve(new fetch.Response(body, {
+          headers: { 'Content-Type': 'application/json' },
+        }));
+      });
+      fetchSpy.Headers = fetch.Headers;
+      const sdk = new PayrexSdkBase({
+        publicKey: 'PUBLIC-XXXXXXXX',
+        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        baseUrl: 'http://localhost/',
+        fetch: fetchSpy,
+        Headers: fetch.Headers,
+        base64Encode,
+      });
+      sdk
+        .get('/users', { queryParams: { param: 'value', filter: { name: 'Anya' }, x: [1, 2]}})
+        .then((data) => {
+          assert.strictEqual(typeof data, 'object');
+          assert.deepStrictEqual(data, {});
+          // Check fetch
+          assert(fetchSpy.calledOnce);
+          const callArgs = fetchSpy.getCall(0).args;
+          assert.strictEqual(callArgs[0], 'http://localhost/users?param=value&filter%5Bname%5D=Anya&x%5B0%5D=1&x%5B1%5D=2');
+          done();
+        })
+        .catch(done);
+    });
   });
   describe('#post()', function () {
     it('should return data successful', function (done) {

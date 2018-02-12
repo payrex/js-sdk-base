@@ -155,9 +155,7 @@ var PayrexSdkBase = function () {
 
       var url = new URL(path, this.baseUrl);
       if (typeof queryParams === 'object') {
-        Object.keys(queryParams).forEach(function (key) {
-          url.searchParams.set(key, queryParams[key]);
-        });
+        addQueryParams(url.searchParams, queryParams);
       }
       var options = {
         method,
@@ -226,6 +224,24 @@ var PayrexSdkBase = function () {
 
   return PayrexSdkBase;
 }();
+
+function addQueryParams(searchParams, obj) {
+  var prefix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+
+  if (typeof obj === 'object') {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        var val = obj[key];
+        var newPrefix = prefix ? `${prefix}[${key}]` : key;
+        if (typeof val === 'object') {
+          addQueryParams(searchParams, val, newPrefix);
+        } else {
+          searchParams.set(newPrefix, val);
+        }
+      }
+    }
+  }
+}
 
 PayrexSdkBase.PayrexApiError = PayrexApiError;
 

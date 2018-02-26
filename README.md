@@ -34,3 +34,79 @@ const sdkBase = new PayrexSdkBase(options);
 | fetch | function | *required* | [Fetch function](https://fetch.spec.whatwg.org/) |
 | Headers | function | *required* | [Fetch Headers](https://fetch.spec.whatwg.org/) |
 | Url | object | *required* | [Url class](https://url.spec.whatwg.org/) |
+
+
+### get(`path, [options]`)
+
+Make HTTP-GET request to API.
+
+| Param | Type | Description |
+|-------|------|-------------|
+| path | **string** | Path (ex. "/users" or "/users/1") |
+| options | **object** | Options |
+| options.queryParams | **object** | Additional query params to merge |
+
+```js
+sdkBase
+  .get('/users?status=ACTIVE')
+  .then(response => { /* ... */})
+  .catch(err => {/* Process error */})
+```
+
+### post(`path, body, [options]`)
+
+Make HTTP-POST request to API.
+
+| Param | Type | Description |
+|-------|------|-------------|
+| path | **string** | Path (ex. "/users" or "/users/1") |
+| body | **object** | Body data |
+| options | **object** | Options |
+| options.queryParams | **object** | Additional query params to merge |
+
+```js
+sdkBase
+  .post('/users', {
+    name: 'John Doe',
+    status: 'ACTIVE'
+  })
+  .then(response => { /* ... */})
+  .catch(err => {/* Process error */})
+```
+
+### put(`path, body, [options]`)
+
+Make HTTP-PUT request to API.
+
+| Param | Type | Description |
+|-------|------|-------------|
+| path | **string** | Path (ex. "/users" or "/users/1") |
+| body | **object** | Body data |
+| options | **object** | Options |
+| options.queryParams | **object** | Additional query params to merge |
+
+```js
+sdkBase
+  .put('/users', {
+    name: 'Johnny Doe'
+  })
+  .then(response => { /* ... */})
+  .catch(err => {/* Process error */})
+```
+
+### remove(`path, [options]`)
+
+Make HTTP-DELETE request to API.
+
+| Param | Type | Description |
+|-------|------|-------------|
+| path | **string** | Path (ex. "/users" or "/users/1") |
+| options | **object** | Options |
+| options.queryParams | **object** | Additional query params to merge |
+
+```js
+sdkBase
+  .remove('/users/1')
+  .then(response => { /* ... */})
+  .catch(err => {/* Process error */})
+```

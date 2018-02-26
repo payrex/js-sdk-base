@@ -1,18 +1,33 @@
+/* eslint-disable no-restricted-syntax, no-prototype-builtins */
 const { URL } = require('whatwg-url');
 const PayrexApiError = require('./PayrexApiError');
 
-const REQUIRED_FIELDS = ['fetch', 'Headers', 'base64Encode'];
+const REQUIRED_FIELDS = ['fetch', 'Headers', 'credentials'];
+
+function addQueryParams(searchParams, obj, prefix = '') {
+  if (typeof obj === 'object') {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const val = obj[key];
+        const newPrefix = prefix ? `${prefix}[${key}]` : key;
+        if (typeof val === 'object') {
+          addQueryParams(searchParams, val, newPrefix);
+        } else {
+          searchParams.set(newPrefix, val);
+        }
+      }
+    }
+  }
+}
 
 class PayrexSdkBase {
   /**
    * PayrexSdkBase constructor
    * @param {object} options
-   * @param {string} options.publicKey
-   * @param {string} options.secretKey
+   * @param {string} options.credentials
    * @param {string} options.baseUrl
    * @param {function} options.fetch [Fetch function](https://fetch.spec.whatwg.org/)
    * @param {function} options.Headers [Fetch Headers](https://fetch.spec.whatwg.org/)
-   * @param {function} options.base64Encode Function to encode string (utf-8) in base64
    */
   constructor(options = {}) {
     REQUIRED_FIELDS
@@ -23,23 +38,19 @@ class PayrexSdkBase {
       });
 
     const {
-      publicKey = '',
-      secretKey = '',
+      credentials = '',
       baseUrl = 'http://localhost:3000/',
       fetch,
       Headers,
-      base64Encode,
     } = options;
     if (!baseUrl) {
       throw new Error('Option "baseUrl" is required');
     }
 
-    this.publicKey = publicKey;
-    this.secretKey = secretKey;
+    this.credentials = credentials;
     this.baseUrl = baseUrl;
     this.fetch = fetch;
     this.Headers = Headers;
-    this.base64Encode = base64Encode;
   }
 
   /**
@@ -95,13 +106,13 @@ class PayrexSdkBase {
   buildFetchOptions(method = 'GET', path = '', queryParams = {}, body = {}) {
     const url = new URL(path, this.baseUrl);
     if (typeof queryParams === 'object') {
-      addQueryParams(url.searchParams, queryParams)
+      addQueryParams(url.searchParams, queryParams);
     }
     const options = {
       method,
       headers: new this.Headers({
         Accept: 'application/json',
-        Authorization: `Basic ${this.base64Encode(`${this.publicKey}:${this.secretKey}`)}`,
+        Authorization: `Bearer ${this.credentials}`,
         'Content-type': 'application/json',
       }),
       body: body ? JSON.stringify(body) : undefined,
@@ -152,20 +163,6 @@ class PayrexSdkBase {
           .json()
           .then(json => this.constructor.parseResponse(status, json));
       });
-  }
-}
-
-function addQueryParams(searchParams, obj, prefix = '') {
-  if (typeof obj === 'object') {
-    for (let key in obj) if (obj.hasOwnProperty(key)) {
-      const val = obj[key]
-      const newPrefix = prefix ? `${prefix}[${key}]` : key
-      if (typeof val === 'object') {
-        addQueryParams(searchParams, val, newPrefix)
-      } else {
-        searchParams.set(newPrefix, val)
-      }
-    }
   }
 }
 

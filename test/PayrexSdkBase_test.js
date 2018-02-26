@@ -3,9 +3,6 @@ const sinon = require('sinon');
 const fetch = require('node-fetch');
 const PayrexSdkBase = require('../src/PayrexSdkBase');
 
-// Base64 mock function
-const base64Encode = str => Buffer.from(str, 'utf-8').toString('base64');
-
 // Get error
 const getError = (statusCode = 500, code = 'ERROR_CODE', message = 'Message...') => {
   const fetchSpy = sinon.spy(() => {
@@ -17,12 +14,10 @@ const getError = (statusCode = 500, code = 'ERROR_CODE', message = 'Message...')
   });
   fetchSpy.Headers = fetch.Headers;
   const sdk = new PayrexSdkBase({
-    publicKey: 'PUBLIC-XXXXXXXX',
-    secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+    credentials: 'XXXXXXXXXXXXXXXXXXXX',
     baseUrl: 'http://localhost/',
     fetch: fetchSpy,
     Headers: fetch.Headers,
-    base64Encode,
   });
   return { fetchSpy, sdk };
 };
@@ -31,16 +26,13 @@ describe('PayrexSdkBase', () => {
   describe('#constructor()', () => {
     it('should create success', () => {
       const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        credentials: 'XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch,
         Headers: fetch.Headers,
-        base64Encode,
       });
       assert.strictEqual(typeof sdk, 'object');
-      assert.strictEqual(sdk.publicKey, 'PUBLIC-XXXXXXXX');
-      assert.strictEqual(sdk.secretKey, 'SECRET-XXXXXXXXXXXXXXXXXXXX');
+      assert.strictEqual(sdk.credentials, 'XXXXXXXXXXXXXXXXXXXX');
       assert.strictEqual(sdk.baseUrl, 'http://localhost/');
       assert.strictEqual(typeof sdk.get, 'function');
       assert.strictEqual(typeof sdk.post, 'function');
@@ -50,11 +42,9 @@ describe('PayrexSdkBase', () => {
     it('should throw validation error', () => {
       assert.throws(() => {
         new PayrexSdkBase({
-          publicKey: 'PUBLIC-XXXXXXXX',
-          secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+          credentials: 'XXXXXXXXXXXXXXXXXXXX',
           baseUrl: 'http://localhost/',
           Headers: fetch.Headers,
-          base64Encode,
         });
       }, /Option "fetch" is required/);
     });
@@ -62,7 +52,7 @@ describe('PayrexSdkBase', () => {
       new PayrexSdkBase({
         fetch,
         Headers: fetch.Headers,
-        base64Encode,
+        credentials: 'XXXXXXXXXXXXXXXXXXXX'
       });
     });
   });
@@ -76,12 +66,10 @@ describe('PayrexSdkBase', () => {
       });
       fetchSpy.Headers = fetch.Headers;
       const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        credentials: 'XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
         Headers: fetch.Headers,
-        base64Encode,
       });
       sdk
         .get('/users')
@@ -94,7 +82,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[0], 'http://localhost/users');
           assert.strictEqual(callArgs[1].method, 'GET');
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
-          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
+          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Bearer XXXXXXXXXXXXXXXXXXXX');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
           assert(!callArgs[1].body);
           done();
@@ -118,7 +106,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[0], 'http://localhost/users');
           assert.strictEqual(callArgs[1].method, 'GET');
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
-          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
+          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Bearer XXXXXXXXXXXXXXXXXXXX');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
           assert(!callArgs[1].body);
           done();
@@ -200,12 +188,10 @@ describe('PayrexSdkBase', () => {
       });
       fetchSpy.Headers = fetch.Headers;
       const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        credentials: 'XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
         Headers: fetch.Headers,
-        base64Encode,
       });
       sdk
         .get('/users', { queryParams: { param: 'value', filter: { name: 'Anya' }, x: [1, 2]}})
@@ -231,12 +217,10 @@ describe('PayrexSdkBase', () => {
       });
       fetchSpy.Headers = fetch.Headers;
       const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        credentials: 'XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
         Headers: fetch.Headers,
-        base64Encode,
       });
       sdk
         .post('/users', { name: 'test', enabled: true }, { queryParams: { action: 'create' } })
@@ -249,7 +233,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[0], 'http://localhost/users?action=create');
           assert.strictEqual(callArgs[1].method, 'POST');
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
-          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
+          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Bearer XXXXXXXXXXXXXXXXXXXX');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
           assert.strictEqual(callArgs[1].body, '{"name":"test","enabled":true}');
           done();
@@ -267,12 +251,10 @@ describe('PayrexSdkBase', () => {
       });
       fetchSpy.Headers = fetch.Headers;
       const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        credentials: 'XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
         Headers: fetch.Headers,
-        base64Encode,
       });
       sdk
         .put('/users?action=update', { name: 'test', enabled: true }, { queryParams: { id: 102 } })
@@ -285,7 +267,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[0], 'http://localhost/users?action=update&id=102');
           assert.strictEqual(callArgs[1].method, 'PUT');
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
-          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
+          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Bearer XXXXXXXXXXXXXXXXXXXX');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
           assert.strictEqual(callArgs[1].body, '{"name":"test","enabled":true}');
           done();
@@ -303,12 +285,10 @@ describe('PayrexSdkBase', () => {
       });
       fetchSpy.Headers = fetch.Headers;
       const sdk = new PayrexSdkBase({
-        publicKey: 'PUBLIC-XXXXXXXX',
-        secretKey: 'SECRET-XXXXXXXXXXXXXXXXXXXX',
+        credentials: 'XXXXXXXXXXXXXXXXXXXX',
         baseUrl: 'http://localhost/',
         fetch: fetchSpy,
         Headers: fetch.Headers,
-        base64Encode,
       });
       sdk
         .remove('/users?id=1')
@@ -321,7 +301,7 @@ describe('PayrexSdkBase', () => {
           assert.strictEqual(callArgs[0], 'http://localhost/users?id=1');
           assert.strictEqual(callArgs[1].method, 'DELETE');
           assert.strictEqual(callArgs[1].headers.get('Accept'), 'application/json');
-          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Basic UFVCTElDLVhYWFhYWFhYOlNFQ1JFVC1YWFhYWFhYWFhYWFhYWFhYWFhYWA==');
+          assert.strictEqual(callArgs[1].headers.get('Authorization'), 'Bearer XXXXXXXXXXXXXXXXXXXX');
           assert.strictEqual(callArgs[1].headers.get('Content-type'), 'application/json');
           assert(!callArgs[1].body);
           done();

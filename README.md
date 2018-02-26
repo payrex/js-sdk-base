@@ -29,10 +29,8 @@ const sdkBase = new PayrexSdkBase(options);
 
 | Option | Type | Usage | Description |
 |--------|------|-------|-------------|
-| publicKey | string | *optional* | API public key |
-| secretKey | string | *optional* | API secret key |
+| credentials | string | *optional* | API secret key |
 | baseUrl | string | *optional* | API base url (default "http://localhost:3000/") |
 | fetch | function | *required* | [Fetch function](https://fetch.spec.whatwg.org/) |
 | Headers | function | *required* | [Fetch Headers](https://fetch.spec.whatwg.org/) |
 | Url | object | *required* | [Url class](https://url.spec.whatwg.org/) |
-| base64Encode | function | *required* | Function to encode string (utf-8) in base64 |

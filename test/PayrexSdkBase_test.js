@@ -51,8 +51,7 @@ describe('PayrexSdkBase', () => {
     it('should create with minimum options', () => {
       new PayrexSdkBase({
         fetch,
-        Headers: fetch.Headers,
-        credentials: 'XXXXXXXXXXXXXXXXXXXX'
+        Headers: fetch.Headers
       });
     });
   });

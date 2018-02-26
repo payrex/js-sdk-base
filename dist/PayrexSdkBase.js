@@ -10,7 +10,7 @@ var _require = require('whatwg-url'),
 
 var PayrexApiError = require('./PayrexApiError');
 
-var REQUIRED_FIELDS = ['fetch', 'Headers', 'credentials'];
+var REQUIRED_FIELDS = ['fetch', 'Headers'];
 
 function addQueryParams(searchParams, obj) {
   var prefix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
@@ -169,13 +169,16 @@ var PayrexSdkBase = function () {
       if (typeof queryParams === 'object') {
         addQueryParams(url.searchParams, queryParams);
       }
+      var headers = new this.Headers({
+        Accept: 'application/json',
+        'Content-type': 'application/json'
+      });
+      if (this.credentials) {
+        headers.set('Authorization', `Bearer ${this.credentials}`);
+      }
       var options = {
         method,
-        headers: new this.Headers({
-          Accept: 'application/json',
-          Authorization: `Bearer ${this.credentials}`,
-          'Content-type': 'application/json'
-        }),
+        headers,
         body: body ? JSON.stringify(body) : undefined
       };
       return { url: url.toString(), options };

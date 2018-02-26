@@ -2,7 +2,7 @@
 const { URL } = require('whatwg-url');
 const PayrexApiError = require('./PayrexApiError');
 
-const REQUIRED_FIELDS = ['fetch', 'Headers', 'credentials'];
+const REQUIRED_FIELDS = ['fetch', 'Headers'];
 
 function addQueryParams(searchParams, obj, prefix = '') {
   if (typeof obj === 'object') {
@@ -108,13 +108,16 @@ class PayrexSdkBase {
     if (typeof queryParams === 'object') {
       addQueryParams(url.searchParams, queryParams);
     }
+    const headers = new this.Headers({
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    });
+    if (this.credentials) {
+      headers.set('Authorization', `Bearer ${this.credentials}`);
+    }
     const options = {
       method,
-      headers: new this.Headers({
-        Accept: 'application/json',
-        Authorization: `Bearer ${this.credentials}`,
-        'Content-type': 'application/json',
-      }),
+      headers,
       body: body ? JSON.stringify(body) : undefined,
     };
     return { url: url.toString(), options };
